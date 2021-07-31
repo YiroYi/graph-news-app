@@ -1,0 +1,19 @@
+{
+  "name": "graph-news-app",
+  "version": "1.0.0",
+  "description": "News app with graphQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YiroYi/graph-news-app.git"
+  },
+  "author": "Yiro Yi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YiroYi/graph-news-app/issues"
+  },
+  "homepage": "https://github.com/YiroYi/graph-news-app#readme"
+}
