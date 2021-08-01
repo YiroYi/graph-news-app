@@ -1,5 +1,9 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
+const mongoose = require("mongoose");
+const validator = require("validator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
+const SALT_I = 10;
 
 const userSchema = mongoose.Schema({
   email: {
@@ -8,26 +12,55 @@ const userSchema = mongoose.Schema({
     trim: true,
     unique: true,
     lowercase: true,
-    validate:[validator.isEmail, 'invalid email']
+    validate: [validator.isEmail, "invalid email"],
   },
   password: {
     type: String,
     required: true,
-    minlength: 5
+    minlength: 5,
   },
-  name:{
+  name: {
     type: String,
-    maxlength: 5
+    maxlength: 5,
   },
-  lastname:{
+  lastname: {
     type: String,
-    maxlength: 5
+    maxlength: 5,
   },
-  token:{
+  token: {
     type: String,
+  },
+});
+
+userSchema.methods.generateToken = async function(){
+  var user = this;
+  var token = jwt.sign({email: user.email}, process.env.SECRET,{
+    expiresIn:'7d'
+  });
+
+  user.token = token;
+
+  return user.save();
+}
+
+userSchema.pre('save', function(next){
+  var user = this;
+
+  if(user.isModified('password')) {
+    bcrypt.genSalt(SALT_I, function(err, salt){
+      if(err) return next(err);
+
+      bcrypt.hash(user.password, salt, function(err, hash){
+        if(err) return next(err);
+        user.password = hash;
+        next();
+      })
+    });
+  } else {
+    next();
   }
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = { User };
