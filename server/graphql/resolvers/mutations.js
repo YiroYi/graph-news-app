@@ -1,4 +1,9 @@
 const { User } = require("../../models/user");
+const {
+  UserInputError,
+  AuthenticationError,
+  ApolloError,
+} = require("apollo-server-express");
 
 module.exports = {
   Mutation: {
@@ -14,15 +19,17 @@ module.exports = {
 
         const getToken = await user.generateToken();
 
-        if(!getToken) {
+        if (!getToken) {
+          throw new AuthenticationError("Something went wrong, try again");
+        }
 
-         }
-
-        const result = await user.save();
-      
-        return { ...result._doc };
+        return { ...getToken._doc };
       } catch (err) {
-        throw err;
+        if (err.code == 11000) {
+          throw new AuthenticationError(
+            "Sorry duplicated email, try a new one"
+          );
+        }
       }
     },
   },
