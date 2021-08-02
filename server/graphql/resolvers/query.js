@@ -1,7 +1,14 @@
+const { User } = require("../../models/user");
+
 module.exports = {
   Query: {
-    hello: async(parent, args, context, info)=>{
-      return 'Hello world';
+    user: async(parent, args, context, info)=>{
+      try {
+        const user = await User.findOne({'_id': args.id }); 
+        return user;
+      } catch (err) {
+        throw err;
+      }
     }
   }
 }
