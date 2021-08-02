@@ -83,12 +83,41 @@ module.exports = {
             },
           },
           {
-            new: true
+            new: true,
           }
         );
 
-        return { ...user._doc }
+        return { ...user._doc };
       } catch (err) {}
+    },
+    updateEmailPass: async (parents, args, context, info) => {
+      try {
+        const req = authorize(context.req);
+
+        if (!userOwnership(req, args._id))
+          throw new AuthenticationError("You dont own this user");
+
+        const user = await User.findOne({ _id: req._id });
+
+        if (!user) throw new AuthenticationError("Sorry Try again");
+
+        if (args.email) {
+          user.email = args.email;
+        }
+        if (args.password) {
+          user.password = args.password;
+        }
+
+        const getToken = await user.generateToken();
+       
+        if (!getToken) {
+          throw new AuthenticationError("Something went wrong, try againx");
+        }
+
+        return { ...getToken._doc, token: getToken.token };
+      } catch (err) {
+        throw new ApolloError("Something went wrong, try again", err);
+      }
     },
   },
 };
