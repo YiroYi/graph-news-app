@@ -17,7 +17,12 @@ const server = new ApolloServer({
   typeDefs,
   resolvers: {
     Query,
-    Mutation
+    Mutation,
+  },
+  context: ({ req }) => {
+    req.headers.authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTA3OTM3NDRjYWZiMDM3NmUxZWI5MGMiLCJlbWFpbCI6ImtyaXB0b0B0ZXN0LmNvbSIsImlhdCI6MTYyNzkxMzkxMSwiZXhwIjoxNjI4NTE4NzExfQ.3rGHoMTU6mpR0SfWaxzom4jFLYtTZlal_JYfx4n9hPI";
+
+    return { req };
   },
 });
 
