@@ -4,7 +4,8 @@ const {
   AuthenticationError,
   ApolloError,
 } = require("apollo-server-express");
-
+const authorize = require("../../utils/isAuth");
+const { userOwnership } = require("../../utils/tools");
 module.exports = {
   Mutation: {
     authUser: async (parent, args, context, info) => {
@@ -30,11 +31,10 @@ module.exports = {
         }
 
         return {
-          _id:user._id,
+          _id: user._id,
           email: user.email,
-          token: getToken.token
+          token: getToken.token,
         };
-
       } catch (err) {
         if (err.code == 11000) {
           throw new AuthenticationError(
@@ -64,6 +64,31 @@ module.exports = {
           );
         }
       }
+    },
+    updateUserProfile: async (parents, args, context, info) => {
+      try {
+        const req = authorize(context.req);
+
+        if (!userOwnership(req, args._id))
+          throw new AuthenticationError("You dont own this user");
+
+        const user = await User.findOneAndUpdate(
+          {
+            _id: args._id,
+          },
+          {
+            $set: {
+              name: args.name,
+              lastname: args.lastname,
+            },
+          },
+          {
+            new: true
+          }
+        );
+
+        return { ...user._doc }
+      } catch (err) {}
     },
   },
 };
