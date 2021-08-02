@@ -4,21 +4,33 @@ const { AuthenticationError } = require("apollo-server-express");
 
 module.exports = {
   Query: {
-    user: async(parent, args, context, info)=>{
+    user: async (parent, args, context, info) => {
       try {
         const req = authorize(context.req);
 
-        const user = await User.findOne({'_id': args.id });
+        const user = await User.findOne({ _id: args.id });
 
-        if(req._id.toString() !== user._id.toString()){
-          throw new AuthenticationError("YOU DONT OWN THIS USER"); 
+        if (req._id.toString() !== user._id.toString()) {
+          throw new AuthenticationError("YOU DONT OWN THIS USER");
         }
 
         return user;
       } catch (err) {
         throw err;
       }
-    }
-  }
-}
+    },
+    isAuth: async (parent, args, context, info) => {
+      try {
+        const req = authorize(context.req, true);
 
+        if(!req._id) {
+          throw new AuthenticationError('Bad token');
+        }
+
+        return { _id: req._id, email: req.email, token: req.token };
+      } catch (err) {
+        throw err;
+      }
+    },
+  },
+};
