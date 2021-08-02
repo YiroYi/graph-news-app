@@ -11,6 +11,7 @@ const typeDefs = gql`
     updateUserProfile(name: String, lastname: String, _id: ID!): User!
     authUser(fields: AuthInput!): User!
     signUp(fields: AuthInput!): User!
+    createPost(fields: PostInput!): Post!
   }
 
   type User {
@@ -25,6 +26,29 @@ const typeDefs = gql`
   input AuthInput {
     email: String!
     password: String!
+  }
+
+  type Post {
+    _id: ID!
+    title: String!
+    excerpt: String!
+    content: String!
+    author: User!
+    status: PostStatus
+    created_at: String!
+    updated_at: String!
+  }
+
+  input PostInput {
+    title: String
+    excerpt: String
+    content: String
+    status: PostStatus
+  }
+
+  enum PostStatus {
+    PUBLIC
+    DRAFT
   }
 `;
 

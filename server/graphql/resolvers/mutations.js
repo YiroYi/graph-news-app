@@ -1,4 +1,5 @@
 const { User } = require("../../models/user");
+const { Post } = require("../../models/post");
 const {
   UserInputError,
   AuthenticationError,
@@ -119,5 +120,23 @@ module.exports = {
         throw new ApolloError("Something went wrong, try again", err);
       }
     },
+    createPost: async (parent,{ fields }, context, info) => {
+      try {
+        const req = authorize(context.req);
+        const post = new Post({
+          title: fields.title,
+          excerpt: fields.excerpt,
+          content: fields.content,
+          author: req._id,
+          status: fields.status
+        });
+
+        const result = await post.save()
+
+        return { ...result._doc }
+      } catch(err){
+        throw err
+      } 
+    }
   },
 };
