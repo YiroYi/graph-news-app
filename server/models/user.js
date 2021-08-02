@@ -49,7 +49,7 @@ userSchema.methods.generateToken = async function () {
   });
   
   user.token = token;
-  console.log(user);
+  
   return user.save();
 };
 
