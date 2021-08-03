@@ -4,6 +4,9 @@ const typeDefs = gql`
   type Query {
     user(id: ID!): User!
     isAuth: User!
+    post(id: ID!): Post!
+    posts(sort: SortInput, queryBy: QueryByInput): [Post!]!
+    categories(catId: ID): [Category!]!
   }
 
   type Mutation {
@@ -12,7 +15,11 @@ const typeDefs = gql`
     authUser(fields: AuthInput!): User!
     signUp(fields: AuthInput!): User!
     createPost(fields: PostInput!): Post!
+    updatePost(fields: PostInput!, postId:ID!): Post!
+    deletePost(postId:ID!): Post
     createCategory(name: String!): Category!
+    updateCategory(catId: ID!, name: String!): Category!
+    deleteCategory(catId: ID!): Category
   }
 
   type User {
@@ -22,6 +29,8 @@ const typeDefs = gql`
     name: String
     lastname: String
     token: String
+    posts(sort: SortInput): [Post!]!
+    categories: [Category!]!
   }
 
   input AuthInput {
@@ -34,10 +43,12 @@ const typeDefs = gql`
     title: String!
     excerpt: String!
     content: String!
-    author: User!
     status: PostStatus
     created_at: String!
     updated_at: String!
+    category: Category
+    author: User!
+    related(sort: SortInput): [Post!]!
   }
 
   input PostInput {
@@ -45,6 +56,7 @@ const typeDefs = gql`
     excerpt: String
     content: String
     status: PostStatus
+    category: ID
   }
 
   enum PostStatus {
@@ -57,6 +69,18 @@ const typeDefs = gql`
     name: String!
     author: User!
     posts: [Post]
+  }
+
+  input SortInput {
+    sortBy: String
+    order: String
+    limit: Int
+    skip: Int
+  }
+
+  input QueryByInput {
+    key: String!
+    value: String
   }
 `;
 
