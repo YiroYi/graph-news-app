@@ -22,6 +22,8 @@ const typeDefs = gql`
     name: String
     lastname: String
     token: String
+    posts: [Post!]!
+    categories: [Category!]!
   }
 
   input AuthInput {
@@ -34,10 +36,11 @@ const typeDefs = gql`
     title: String!
     excerpt: String!
     content: String!
-    author: User!
     status: PostStatus
     created_at: String!
     updated_at: String!
+    category: Category
+    author: User!
   }
 
   input PostInput {
@@ -45,6 +48,7 @@ const typeDefs = gql`
     excerpt: String
     content: String
     status: PostStatus
+    category: ID
   }
 
   enum PostStatus {

@@ -129,6 +129,7 @@ module.exports = {
           excerpt: fields.excerpt,
           content: fields.content,
           author: req._id,
+          category: fields.category,
           status: fields.status,
         });
 
