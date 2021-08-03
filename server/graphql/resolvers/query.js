@@ -1,4 +1,5 @@
 const { User } = require("../../models/user");
+const { Category } = require("../../models/category");
 const authorize = require("../../utils/isAuth");
 const { AuthenticationError } = require("apollo-server-express");
 
@@ -32,5 +33,14 @@ module.exports = {
         throw err;
       }
     },
+    categories: async(parent, args, context, info) => {
+      try {
+        const categories = await Category.find({_id: args.catId});
+
+        return categories; 
+      } catch(err) { 
+        throw err;
+       }
+    }
   },
 };
