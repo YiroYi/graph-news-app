@@ -140,6 +140,33 @@ module.exports = {
         throw err;
       }
     },
+    updatePost: async (parent, {fields, postId}, context, info) => {
+      try {
+        const req = authorize(context.req);
+        const post = await Post.findOne({_id: postId });
+
+        if(!userOwnership(req, post.author))
+        throw new AuthenticationError('Unauthorized, sorry');
+
+        for(key in fields) {
+          if(post[key] != fields[key]){
+            post[key] = fields[key];
+          }
+        }
+
+        const result = await post.save();
+                
+        return { ...post._doc };
+      } catch (err) {throw err;}
+    },
+    deletePost: async (parent, { postId }, context, info) => {
+       const req = authorize(context.req);
+       const post = await Post.findByIdAndRemove(postId);
+
+       if(!post) throw new UserInputError('Sorry. Not able to find your post');
+
+       return post;
+    },
     createCategory: async (path, args, context, info) => {
       try {
         const req = authorize(context.req);
