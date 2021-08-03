@@ -55,6 +55,10 @@ module.exports = {
       try {
         let queryByArgs = {}
         let sortArgs = sortArgsHelper(sort);
+          
+        if(queryBy){
+          queryByArgs[queryBy.key] = queryBy.value
+        }
 
         const posts = await Post
         .find(queryByArgs)
