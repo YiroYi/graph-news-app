@@ -1,5 +1,6 @@
 const { User } = require("../../models/user");
 const { Post } = require("../../models/post");
+const { Category } = require("../../models/category");
 const {
   UserInputError,
   AuthenticationError,
@@ -110,7 +111,7 @@ module.exports = {
         }
 
         const getToken = await user.generateToken();
-       
+
         if (!getToken) {
           throw new AuthenticationError("Something went wrong, try againx");
         }
@@ -120,7 +121,7 @@ module.exports = {
         throw new ApolloError("Something went wrong, try again", err);
       }
     },
-    createPost: async (parent,{ fields }, context, info) => {
+    createPost: async (parent, { fields }, context, info) => {
       try {
         const req = authorize(context.req);
         const post = new Post({
@@ -128,15 +129,33 @@ module.exports = {
           excerpt: fields.excerpt,
           content: fields.content,
           author: req._id,
-          status: fields.status
+          status: fields.status,
         });
 
-        const result = await post.save()
+        const result = await post.save();
 
-        return { ...result._doc }
-      } catch(err){
-        throw err
-      } 
-    }
+        return { ...result._doc };
+      } catch (err) {
+        throw err;
+      }
+    },
+    createCategory: async (path, args, context, info) => {
+      try {
+        const req = authorize(context.req);
+        const category = new Category({
+          name: args.name,
+          author: req._id,
+        });
+
+        const result = await category.save();
+
+        return { ...category._doc };
+      } catch (err) {
+        throw new ApolloError(
+          "Something went wrong on Category, try again",
+          err
+        );
+      }
+    },
   },
 };
