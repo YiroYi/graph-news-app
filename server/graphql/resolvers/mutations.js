@@ -21,11 +21,8 @@ module.exports = {
         }
 
         const checkpass = await user.comparePassword(args.fields.password);
-
-        if (!checkpass) {
-          throw new AuthenticationError("Invalid password");
-        }
-
+        
+        if(!checkpass) {throw new AuthenticationError('Wrong password'); }
         const getToken = await user.generateToken();
 
         if (!getToken) {
@@ -38,12 +35,8 @@ module.exports = {
           token: getToken.token,
         };
       } catch (err) {
-        if (err.code == 11000) {
-          throw new AuthenticationError(
-            "Sorry duplicated email, try a new one"
-          );
-        }
-      }
+        throw err
+     }
     },
     signUp: async (parent, args, context, info) => {
       try {
