@@ -2,8 +2,11 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Form, Button, Row, Col, Alert } from "react-bootstrap";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from 'react-redux';
+import { signupUser } from '../../../store/actions';
 
 const UserAccess = () => {
+  const dispatch = useDispatch();
   const [type, setType] = useState(true);
 
   const formik = useFormik({
@@ -17,10 +20,17 @@ const UserAccess = () => {
         .min(5, "Min length should be 5")
         .required("Is required"),
     }),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: values => {
+      onSubmitHandler(values);
     },
   });
+
+  const onSubmitHandler = (values) => {
+    if (type) {
+    } else {
+      dispatch(signupUser(values));
+    }
+  };
 
   const displayButton = type ? (
     <Button variant="primary" type="submit">
