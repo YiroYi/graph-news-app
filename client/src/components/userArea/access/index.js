@@ -3,7 +3,7 @@ import { Form, Button, Row, Col, Alert } from "react-bootstrap";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from 'react-redux';
-import { signupUser } from '../../../store/actions';
+import { signupUser, loginUser } from '../../../store/actions';
 import { propTypes } from 'react-bootstrap/esm/Image';
 import axios from 'axios';
 import ToastHandler from '../../utils/toasts';
@@ -29,9 +29,13 @@ const UserAccess = props => {
   });
 
   const onSubmitHandler = (values) => {
-    if (type) {
+    if (type) {      
+      dispatch(loginUser(values))
+      .then(({payload}) => {
+        successHandler(payload);
+      })
+      .catch(err => {console.log(err)});
     } else {
-      console.log('Before dispath');
       dispatch(signupUser(values))
       .then(({payload}) => {
         successHandler(payload);
