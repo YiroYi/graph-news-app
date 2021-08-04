@@ -4,8 +4,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from 'react-redux';
 import { signupUser } from '../../../store/actions';
+import { propTypes } from 'react-bootstrap/esm/Image';
+import axios from 'axios';
+import ToastHandler from '../../utils/toasts';
 
-const UserAccess = () => {
+const UserAccess = props => {
   const dispatch = useDispatch();
   const [type, setType] = useState(true);
 
@@ -28,9 +31,30 @@ const UserAccess = () => {
   const onSubmitHandler = (values) => {
     if (type) {
     } else {
-      dispatch(signupUser(values));
+      console.log('Before dispath');
+      dispatch(signupUser(values))
+      .then(({payload}) => {
+        successHandler(payload);
+      })
+      .catch(err => {console.log(err)});
     }
   };
+
+  const successHandler = (payload) => {
+    const errors = payload.errors;
+    const auth = payload.auth;
+    
+    if (errors) {
+      ToastHandler(errors, 'ERROR')
+    }
+    if (auth) {
+      localStorage.setItem('X-AUTH', auth.token);
+      axios.defaults.headers.common["Authorization"] =
+    "Bearer " + auth.token;
+      ToastHandler('Welcome back', 'SUCCESS')
+      props.history.push('/user_area');
+    }
+  }
 
   const displayButton = type ? (
     <Button variant="primary" type="submit">
