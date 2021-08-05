@@ -1,8 +1,20 @@
 import React, { Fragment } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { withRouter } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from '../store/actions'
 
-const Header = () => {
+const Header = (props) => {
+  const { history } = props;
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    history.push('/');
+  }
+
   return (
     <Fragment>
       <Navbar className="bg-custom" variant="dark">
@@ -12,13 +24,23 @@ const Header = () => {
       </Navbar>
       <Navbar className="bg-custom-small" variant="dark">
         <Nav>
-          <LinkContainer to="/sign_in">
-            <Nav.Link>Sign In</Nav.Link>
-          </LinkContainer>
+          {user.auth ? (
+            <Fragment>
+              <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+
+              <LinkContainer to="/user_are">
+                <Nav.Link>User</Nav.Link>
+              </LinkContainer>
+            </Fragment>
+          ) : (
+            <LinkContainer to="/sign_in">
+              <Nav.Link>Sign In</Nav.Link>
+            </LinkContainer>
+          )}
         </Nav>
       </Navbar>
     </Fragment>
   );
 };
 
-export default Header;
+export default withRouter(Header);

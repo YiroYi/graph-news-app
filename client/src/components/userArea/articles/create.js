@@ -1,16 +1,16 @@
 import React, { Fragment } from "react";
-import UserAreaHOC from "../hoc/userAreaHoc";
+import UserAreaHOC from "../../hoc/userAreaHoc";
 
-const UserArea = () => {
+const Create = () => {
   return (
     <Fragment>
       <UserAreaHOC>
         <div className="mt-3">
-          Welcome to your user area
+          Create a new post! 
         </div>
       </UserAreaHOC>
     </Fragment>
   );
 };
 
-export default UserArea;
+export default Create;
