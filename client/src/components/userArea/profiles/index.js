@@ -1,16 +1,15 @@
 import React, { Fragment } from "react";
 import UserAreaHOC from "../../hoc/userAreaHoc";
+import EmailPass from "./emailPass";
 
-const Profile = () => {
+const Profile = props => {
   return (
     <Fragment>
       <UserAreaHOC>
-        <div className="mt-3">
-          Welcome to your profile
-        </div>
+        <EmailPass {...props} />
       </UserAreaHOC>
     </Fragment>
-  );
+  ); 
 };
 
 export default Profile;
