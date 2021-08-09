@@ -23,3 +23,8 @@ export const logoutUser = () => {
     payload: { auth: null },
   };
 };
+
+export const updateEmailPass = (email, password, id) => ({
+    type: "AUTH_USER",
+    payload: api.updateEmailPass(email, password, id),
+});
