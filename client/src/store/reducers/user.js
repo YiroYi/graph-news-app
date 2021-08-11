@@ -8,7 +8,7 @@ export default function(state={}, action) {
        return {...state, ...action.payload}
 
     case 'LOGOUT':
-       return {...state, ...action.payload}
+       return { auth: action.payload }
     
     case 'USER_STATS':
        return {...state, ...action.payload}

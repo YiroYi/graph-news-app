@@ -20,7 +20,7 @@ export const logoutUser = () => {
 
   return {
     type: "LOGOUT",
-    payload: { auth: null },
+    payload: null
   };
 };
 
