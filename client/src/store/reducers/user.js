@@ -9,6 +9,9 @@ export default function(state={}, action) {
 
     case 'LOGOUT':
        return {...state, ...action.payload}
+    
+    case 'USER_STATS':
+       return {...state, ...action.payload}
     default:
       return state;
   }

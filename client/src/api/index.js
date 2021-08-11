@@ -121,5 +121,45 @@ export const updateEmailPass = async (email, password, id) => {
      }
 
   } catch(err) { console.log(err); }
-} 
+}
+
+export const getUserStats = async (id) => {
+  try {
+    const body = {
+      query: `
+        query User($id: ID!, $sort: SortInput) {
+          user(id: $id) {
+            name
+            lastname
+            posts(sort: $sort) {
+              _id, title
+            }
+            categories {
+              name
+            }
+          }
+        }
+      `,
+      variables: {
+        id: id,
+        sort: {
+          sortBy: "_Id",
+          order: "desc",
+          limit: 3
+        }
+      }
+    } 
+    
+    const { data } = await axios({
+      data: JSON.stringify(body)
+    });
+
+    console.log("IM DATA")
+    console.log(data);
+
+    return {
+      stats: data.data ? data.data.user : null
+    }
+  } catch(error) {console.log(error);}
+}
 

@@ -26,7 +26,7 @@ const server = new ApolloServer({
     Category,
   },
   context: ({ req }) => {
-
+    
     return { req };
   },
 });
