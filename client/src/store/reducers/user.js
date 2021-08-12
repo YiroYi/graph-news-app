@@ -12,6 +12,9 @@ export default function(state={}, action) {
     
     case 'USER_STATS':
        return {...state, ...action.payload}
+    case 'CREATE_POST':
+       return {...state, ...action.payload}
+    
     default:
       return state;
   }
