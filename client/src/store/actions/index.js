@@ -20,16 +20,26 @@ export const logoutUser = () => {
 
   return {
     type: "LOGOUT",
-    payload: null
+    payload: null,
   };
 };
 
 export const updateEmailPass = (email, password, id) => ({
-    type: "AUTH_USER",
-    payload: api.updateEmailPass(email, password, id),
+  type: "AUTH_USER",
+  payload: api.updateEmailPass(email, password, id),
 });
 
 export const getUserStats = (id) => ({
-   type: "USER_STATS",
-   payload: api.getUserStats(id),
+  type: "USER_STATS",
+  payload: api.getUserStats(id),
+});
+
+export const createPost = (post) => ({
+  type: "CREATE_POST",
+  payload: api.createPost(post),
+});
+
+export const clearCreatePost = (post) => ({
+  type: "CREATE_POST",
+  payload: { createdPost: null },
 });

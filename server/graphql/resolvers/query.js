@@ -3,7 +3,7 @@ const { Post } = require("../../models/post");
 const { Category } = require("../../models/category");
 const authorize = require("../../utils/isAuth");
 const { AuthenticationError } = require("apollo-server-express");
-const { sortArgsHelper } = require('../../utils/tools');
+const { sortArgsHelper } = require("../../utils/tools");
 
 module.exports = {
   Query: {
@@ -26,8 +26,8 @@ module.exports = {
       try {
         const req = authorize(context.req, true);
 
-        if(!req._id) {
-          throw new AuthenticationError('Bad token');
+        if (!req._id) {
+          throw new AuthenticationError("Bad token");
         }
 
         return { _id: req._id, email: req.email, token: req.token };
@@ -35,40 +35,46 @@ module.exports = {
         throw err;
       }
     },
-    categories: async(parent, args, context, info) => {
+    categories: async (parent, {catId}, context, info) => {
       try {
-        const categories = await Category.find({_id: args.catId});
-
-        return categories; 
-      } catch(err) { 
-        throw err;
-       }
-    },
-    post: async(parent, args, context, info) => {
-      try {
-        const post = await Post.findOne({_id: args.id}); 
-
-        return post;
-      } catch(err) { throw err; }
-    },
-    posts: async (path, {sort, queryBy}, context, info) => {
-      try {
-        let queryByArgs = {}
-        let sortArgs = sortArgsHelper(sort);
-          
-        if(queryBy){
-          queryByArgs[queryBy.key] = queryBy.value
+        let catQuery = {};
+        if (catId) {
+          catQuery["_id"] = catId;
         }
 
-        const posts = await Post
-        .find(queryByArgs)
-        .sort([[sortArgs.sortBy, sortArgs.order]])
-        .skip(sortArgs.skip)
-        .limit(sortArgs.limit);
+        const categories = await Category.find(catQuery);
+        return categories;
+      } catch (err) {
+        throw err;
+      }
+    },
+    post: async (parent, args, context, info) => {
+      try {
+        const post = await Post.findOne({ _id: args.id });
+
+        return post;
+      } catch (err) {
+        throw err;
+      }
+    },
+    posts: async (path, { sort, queryBy }, context, info) => {
+      try {
+        let queryByArgs = {};
+        let sortArgs = sortArgsHelper(sort);
+
+        if (queryBy) {
+          queryByArgs[queryBy.key] = queryBy.value;
+        }
+
+        const posts = await Post.find(queryByArgs)
+          .sort([[sortArgs.sortBy, sortArgs.order]])
+          .skip(sortArgs.skip)
+          .limit(sortArgs.limit);
 
         return posts;
-      } 
-      catch(err) { throw err; }
-    }
+      } catch (err) {
+        throw err;
+      }
+    },
   },
 };
