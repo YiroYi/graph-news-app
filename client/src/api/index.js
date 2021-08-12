@@ -163,3 +163,21 @@ export const getUserStats = async (id) => {
   } catch(error) {console.log(error);}
 }
 
+export const getCategories = async () => {
+  try {
+    const body = {
+      query: `
+        query {
+          categories {
+            _id
+            name
+          } 
+        }
+      `
+    }
+
+    const { data } = await axios({data: JSON.stringify(body)});
+
+    return data;
+  } catch (error) { console.log(error) }
+}
