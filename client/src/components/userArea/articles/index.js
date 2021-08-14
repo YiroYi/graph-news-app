@@ -2,7 +2,7 @@ import React, { Fragment, useReducer, useEffect } from "react";
 import UserAreaHOC from "../../hoc/userAreaHoc";
 import { Table, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserPosts } from "../../../store/actions";
+import { getUserPosts, updatePostStatus } from "../../../store/actions";
 
 const Articles = (props) => {
   const [sort, setSort] = useReducer(
@@ -16,6 +16,12 @@ const Articles = (props) => {
   useEffect(() => {
     dispatch(getUserPosts(sort, [], user.auth._id));
   }, []);
+
+  const updateStatusHandler = post => {
+    const status = post.status === 'DRAFT' ? 'PUBLIC' : 'DRAFT'
+
+    dispatch(updatePostStatus(status, post._id, user.posts));
+  }
 
   return (
     <Fragment>
@@ -35,7 +41,9 @@ const Articles = (props) => {
                     <td>{index + 1}</td>
                     <td>{post.title}</td>
                     <td>{post.category.name}</td>
-                    <td className={post.status === "DRAFT" ? "yell" : "green"}>
+                    <td 
+                    onClick={() => updateStatusHandler(post)}  
+                    className={post.status === "DRAFT" ? "yell" : "green"}>
                       {post.status}
                     </td>
                     <td className="remove_btn">Remove</td>

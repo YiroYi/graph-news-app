@@ -245,3 +245,40 @@ export const getUserPosts = async(sort, prevState, id) => {
     }
   } catch(error) {console.log(error)}
 }
+
+export const updatePostStatus = async (status, postId, prevState) => {
+  try {
+    const body = {
+      query: `
+        mutation UpdatePost($fields: PostInput!, $postId: ID!) {
+          updatePost(fields: $fields, postId: $postId) {
+            _id
+            title
+            status
+            category { name }
+          }
+  
+        }
+      `,
+       variables: {
+        postId: postId,
+        fields: {status: status}
+       } 
+    }
+    const { data } = await axios({data: JSON.stringify(body)});
+
+    let newState = null;
+    let updPost = data.data ? data.data.updatePost : null;
+
+    if(updPost) {
+      newState = prevState.map(oldObj => {
+        return [updPost].find( newObj => newObj._id === oldObj._id) || oldObj
+      });
+    }
+
+    return {
+      posts: data.data ? newState : prevState
+    }
+
+  }  catch(error) {console.log(error)}
+}
