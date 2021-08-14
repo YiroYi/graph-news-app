@@ -282,3 +282,33 @@ export const updatePostStatus = async (status, postId, prevState) => {
 
   }  catch(error) {console.log(error)}
 }
+
+export const removePost = async (postId, prevState) => {
+  try {
+    const body = {
+      query: `
+        mutation {
+          deletePost(
+            postId: "${postId}"
+          ){
+            _id
+          }  
+        }
+      `
+    }
+
+    const { data } = await axios({data: JSON.stringify(body)});
+
+    let newState = null;
+    let delPost = data.data ? data.data.deletePost : null;
+
+    if(delPost) {
+      newState = prevState.filter(obj => {return obj._id !== delPost._id})
+    }
+
+    return {
+      posts: data.data ? newState : prevState
+    }
+
+  }  catch(error) {console.log(error)}
+}

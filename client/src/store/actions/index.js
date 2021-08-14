@@ -53,3 +53,8 @@ export const updatePostStatus = (status, postId, state) => ({
   type: "UPDATE_POST",
   payload: api.updatePostStatus(status, postId, state),
 });
+
+export const removePost = (postId, state) => ({
+  type: "USER_POSTS",
+  payload: api.removePost(postId, state),
+});

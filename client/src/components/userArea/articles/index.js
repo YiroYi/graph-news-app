@@ -2,7 +2,7 @@ import React, { Fragment, useReducer, useEffect } from "react";
 import UserAreaHOC from "../../hoc/userAreaHoc";
 import { Table, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserPosts, updatePostStatus } from "../../../store/actions";
+import { getUserPosts, updatePostStatus, removePost } from "../../../store/actions";
 
 const Articles = (props) => {
   const [sort, setSort] = useReducer(
@@ -21,6 +21,10 @@ const Articles = (props) => {
     const status = post.status === 'DRAFT' ? 'PUBLIC' : 'DRAFT'
 
     dispatch(updatePostStatus(status, post._id, user.posts));
+  }
+
+  const removePostHandler = post => {
+    dispatch(removePost(post._id, user.posts));
   }
 
   return (
@@ -46,7 +50,7 @@ const Articles = (props) => {
                     className={post.status === "DRAFT" ? "yell" : "green"}>
                       {post.status}
                     </td>
-                    <td className="remove_btn">Remove</td>
+                    <td onClick={()=>removePostHandler(post)}className="remove_btn">Remove</td>
                   </tr>
                 ))
               : null}
